@@ -46,5 +46,21 @@
       "stage-0"
     ]
   },
-  "homepage": "https://twisttrl.github.io/react-onplot-xranger"
+  "homepage": "https://twisttrl.github.io/react-onplot-xranger",
+  "description": "https://twisttrl.github.io/react-onplot-xranger/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TwistTRL/react-onplot-xranger.git"
+  },
+  "keywords": [
+    "react",
+    "plot",
+    "ranger",
+    "slider"
+  ],
+  "author": "Lingyu Zhou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TwistTRL/react-onplot-xranger/issues"
+  }
 }
