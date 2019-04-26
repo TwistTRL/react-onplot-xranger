@@ -21,7 +21,6 @@ class OnPlotXRanger extends PureComponent {
   
   render() {
     let { minX,maxX,
-          globalMinX,globalMaxX,
           width,height,
           startX,endX,
           topHandle
