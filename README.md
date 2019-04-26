@@ -20,3 +20,6 @@ https://twisttrl.github.io/react-onplot-xranger/
                 updateMaxXHandler={this.handleUpdateMaxX}
                 />
 ```
+
+# Feature
+* Clickable to zoom in
