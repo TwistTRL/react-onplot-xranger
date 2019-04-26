@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
 import {toDomXCoord_Linear,
         fromDomXCoord_Linear} from "plot-utils";
@@ -90,14 +90,14 @@ class OnPlotXRanger extends PureComponent {
     }
     
     return (
-      <>
+      <Fragment>
         <div ref={this.ref} style={{overflow:"hidden",position:"relative",height:height,width:width,top:0,left:0}}>
           {mainHandleElem}
           {leftHandleElem}
           {rightHandleElem}
         </div>
         {documentInteractionElem}
-      </>
+      </Fragment>
     );
   }
   
