@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/react-onplot-xranger/precache-manifest.f9e05bdc5a9cca6e7cde3f183c45aafa.js"
+  "/react-onplot-xranger/precache-manifest.5124c520ea4c4ab2df804a1aadc39ae7.js"
 );
 
 workbox.clientsClaim();

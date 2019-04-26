@@ -4,19 +4,19 @@ self.__precacheManifest = [
     "url": "/react-onplot-xranger/static/js/runtime~main.a47b0b57.js"
   },
   {
-    "revision": "1aec3e27f10866f4d017",
-    "url": "/react-onplot-xranger/static/js/main.e8a8e1df.chunk.js"
+    "revision": "921fb12ef4bd91530548",
+    "url": "/react-onplot-xranger/static/js/main.d4ba8113.chunk.js"
   },
   {
     "revision": "98987e6026b78dc3b892",
     "url": "/react-onplot-xranger/static/js/2.a9946ea7.chunk.js"
   },
   {
-    "revision": "1aec3e27f10866f4d017",
-    "url": "/react-onplot-xranger/static/css/main.ca7d8442.chunk.css"
+    "revision": "921fb12ef4bd91530548",
+    "url": "/react-onplot-xranger/static/css/main.d286fa82.chunk.css"
   },
   {
-    "revision": "569a7f545c5746aa2cbeda939475762c",
+    "revision": "72063b9f4e7a3afb869960a32a861da5",
     "url": "/react-onplot-xranger/index.html"
   }
 ];
