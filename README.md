@@ -18,6 +18,7 @@ https://twisttrl.github.io/react-onplot-xranger/
                 updateEndXHandler={this.handleUpdateEndX}
                 updateMinXHandler={this.handleUpdateMinX}
                 updateMaxXHandler={this.handleUpdateMaxX}
+                dragEndHandler={this.handleDragEnd}
                 />
 ```
 
