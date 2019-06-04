@@ -77,13 +77,13 @@ class OnPlotXRanger extends PureComponent {
     
     switch (dragged) {
       case "left":
-        documentInteractionElem = <DragOverlay mouseMoveHandler={this.handleLeftHandleDragging} mouseUpHandler={this.handleDragEndAsClick} cursor="w-resize"/>;
+        documentInteractionElem = <DragOverlay mouseMoveHandler={this.handleLeftHandleDragging} mouseUpHandler={this.handleDragEnd} cursor="w-resize"/>;
         break;
       case "right":
-        documentInteractionElem = <DragOverlay mouseMoveHandler={this.handleRightHandleDragging} mouseUpHandler={this.handleDragEndAsClick} cursor="e-resize"/>;
+        documentInteractionElem = <DragOverlay mouseMoveHandler={this.handleRightHandleDragging} mouseUpHandler={this.handleDragEnd} cursor="e-resize"/>;
         break;
       case "main":
-        documentInteractionElem = <DragOverlay mouseMoveHandler={this.handleMainHandleDragging} mouseUpHandler={this.handleDragEndAsClick} cursor="ew-resize"/>;
+        documentInteractionElem = <DragOverlay mouseMoveHandler={this.handleMainHandleDragging} mouseUpHandler={this.handleDragEnd} cursor="ew-resize"/>;
         break;
       default:
         break;
@@ -173,7 +173,7 @@ class OnPlotXRanger extends PureComponent {
     updateEndXHandler(endX+deltaX);
   }
   
-  handleDragEndAsClick = (ev)=>{
+  handleDragEnd = (ev)=>{
     ev.stopPropagation();
     ev.preventDefault();
     this.setState({dragged:null});
@@ -191,6 +191,11 @@ class OnPlotXRanger extends PureComponent {
         updateMinXHandler(startX);
         updateMaxXHandler(endX);
       }
+    }
+    // If it is not a click, update report drag end
+    else {
+      let {dragEndHandler} = this.props;
+      dragEndHandler();
     }
   }
 
@@ -262,6 +267,7 @@ OnPlotXRanger.propTypes = {
   updateEndXHandler: PropTypes.func.isRequired,
   updateMinXHandler: PropTypes.func.isRequired,
   updateMaxXHandler: PropTypes.func.isRequired,
+  dragEndHandler: PropTypes.func.isRequired,
 }
 
 export default OnPlotXRanger;
