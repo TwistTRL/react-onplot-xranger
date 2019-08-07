@@ -205,6 +205,7 @@ class OnPlotXRanger extends PureComponent {
     let {offsetStartDomX,diffX} = this;
     let {width,minX,maxX} = this.props;
     let newStartX = fromDomXCoord_Linear(width,minX,maxX,ev.clientX+offsetStartDomX);
+    newStartX = Math.max(minX,Math.min(maxX-diffX,newStartX));
     let newEndX = newStartX+diffX;
     updatingHandler(newStartX,newEndX);
   }

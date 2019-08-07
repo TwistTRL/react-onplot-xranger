@@ -158,6 +158,7 @@ function (_PureComponent) {
           minX = _this$props9.minX,
           maxX = _this$props9.maxX;
       var newStartX = (0, _plotUtils.fromDomXCoord_Linear)(width, minX, maxX, ev.clientX + offsetStartDomX);
+      newStartX = Math.max(minX, Math.min(maxX - diffX, newStartX));
       var newEndX = newStartX + diffX;
       updatingHandler(newStartX, newEndX);
     });
