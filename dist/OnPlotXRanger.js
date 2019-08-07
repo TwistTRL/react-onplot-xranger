@@ -57,6 +57,14 @@ function (_PureComponent) {
     _defineProperty(_assertThisInitialized(_this), "handleLeftHandleDragStart", function (ev) {
       _this.handleDragStart(ev);
 
+      var _this$props = _this.props,
+          width = _this$props.width,
+          minX = _this$props.minX,
+          maxX = _this$props.maxX,
+          startX = _this$props.startX;
+      var startDomX = (0, _plotUtils.toDomXCoord_Linear)(width, minX, maxX, startX);
+      _this.offsetStartDomX = startDomX - ev.clientX;
+
       _this.setState({
         dragged: "left"
       });
@@ -64,6 +72,14 @@ function (_PureComponent) {
 
     _defineProperty(_assertThisInitialized(_this), "handleRightHandleDragStart", function (ev) {
       _this.handleDragStart(ev);
+
+      var _this$props2 = _this.props,
+          width = _this$props2.width,
+          minX = _this$props2.minX,
+          maxX = _this$props2.maxX,
+          endX = _this$props2.endX;
+      var endDomX = (0, _plotUtils.toDomXCoord_Linear)(width, minX, maxX, endX);
+      _this.offsetEndDomX = endDomX - ev.clientX;
 
       _this.setState({
         dragged: "right"
@@ -73,59 +89,77 @@ function (_PureComponent) {
     _defineProperty(_assertThisInitialized(_this), "handleMainHandleDragStart", function (ev) {
       _this.handleDragStart(ev);
 
+      var _this$props3 = _this.props,
+          width = _this$props3.width,
+          minX = _this$props3.minX,
+          maxX = _this$props3.maxX,
+          startX = _this$props3.startX,
+          endX = _this$props3.endX;
+      var startDomX = (0, _plotUtils.toDomXCoord_Linear)(width, minX, maxX, startX);
+      _this.offsetStartDomX = startDomX - ev.clientX;
+      _this.diffX = endX - startX;
+
       _this.setState({
         dragged: "main"
       });
     });
 
     _defineProperty(_assertThisInitialized(_this), "handleLeftHandleDragging", function (ev) {
-      var initialDragX = _this.snapshot.initialDragX;
-      var _this$props = _this.props,
-          updateStartXHandler = _this$props.updateStartXHandler,
-          startX = _this$props.startX,
-          endX = _this$props.endX,
-          minX = _this$props.minX,
-          maxX = _this$props.maxX;
+      _this.handleDragging(ev);
 
-      var curDragX = _this.handleDragging(ev);
+      var _this$props4 = _this.props,
+          updateHandler = _this$props4.updateHandler,
+          endX = _this$props4.endX;
 
-      var newStartX = curDragX - initialDragX + startX;
+      var _assertThisInitialize = _assertThisInitialized(_this),
+          offsetStartDomX = _assertThisInitialize.offsetStartDomX;
+
+      var _this$props5 = _this.props,
+          width = _this$props5.width,
+          minX = _this$props5.minX,
+          maxX = _this$props5.maxX;
+      var newStartX = (0, _plotUtils.fromDomXCoord_Linear)(width, minX, maxX, ev.clientX + offsetStartDomX);
       newStartX = _this.snapStartX(newStartX, minX, endX);
-      updateStartXHandler(newStartX);
+      updateHandler(newStartX, endX);
     });
 
     _defineProperty(_assertThisInitialized(_this), "handleRightHandleDragging", function (ev) {
-      var _this$snapshot = _this.snapshot,
-          startX = _this$snapshot.startX,
-          endX = _this$snapshot.endX,
-          maxX = _this$snapshot.maxX,
-          initialDragX = _this$snapshot.initialDragX;
-      var updateEndXHandler = _this.props.updateEndXHandler;
+      _this.handleDragging(ev);
 
-      var curDragX = _this.handleDragging(ev);
+      var _this$props6 = _this.props,
+          updateHandler = _this$props6.updateHandler,
+          startX = _this$props6.startX;
 
-      var newEndX = curDragX - initialDragX + endX;
+      var _assertThisInitialize2 = _assertThisInitialized(_this),
+          offsetEndDomX = _assertThisInitialize2.offsetEndDomX;
+
+      var _this$props7 = _this.props,
+          width = _this$props7.width,
+          minX = _this$props7.minX,
+          maxX = _this$props7.maxX;
+      var newEndX = (0, _plotUtils.fromDomXCoord_Linear)(width, minX, maxX, ev.clientX + offsetEndDomX);
       newEndX = _this.snapEndX(newEndX, startX, maxX);
-      updateEndXHandler(newEndX);
+      updateHandler(startX, newEndX);
     });
 
     _defineProperty(_assertThisInitialized(_this), "handleMainHandleDragging", function (ev) {
-      var _this$snapshot2 = _this.snapshot,
-          startX = _this$snapshot2.startX,
-          endX = _this$snapshot2.endX,
-          minX = _this$snapshot2.minX,
-          maxX = _this$snapshot2.maxX,
-          initialDragX = _this$snapshot2.initialDragX;
-      var _this$props2 = _this.props,
-          updateStartXHandler = _this$props2.updateStartXHandler,
-          updateEndXHandler = _this$props2.updateEndXHandler;
+      _this.handleDragging(ev);
 
-      var curDragX = _this.handleDragging(ev);
+      var _this$props8 = _this.props,
+          updateHandler = _this$props8.updateHandler,
+          endX = _this$props8.endX;
 
-      var deltaX = curDragX - initialDragX;
-      deltaX = Math.max(Math.min(deltaX, maxX - endX), minX - startX);
-      updateStartXHandler(startX + deltaX);
-      updateEndXHandler(endX + deltaX);
+      var _assertThisInitialize3 = _assertThisInitialized(_this),
+          offsetStartDomX = _assertThisInitialize3.offsetStartDomX,
+          diffX = _assertThisInitialize3.diffX;
+
+      var _this$props9 = _this.props,
+          width = _this$props9.width,
+          minX = _this$props9.minX,
+          maxX = _this$props9.maxX;
+      var newStartX = (0, _plotUtils.fromDomXCoord_Linear)(width, minX, maxX, ev.clientX + offsetStartDomX);
+      var newEndX = newStartX + diffX;
+      updateHandler(newStartX, newEndX);
     });
 
     _defineProperty(_assertThisInitialized(_this), "handleDragEnd", function (ev) {
@@ -142,10 +176,10 @@ function (_PureComponent) {
         clickHandler();
       } // If it is not a click, update report drag end
       else {
-          var _this$props3 = _this.props,
-              updateHandler = _this$props3.updateHandler,
-              startX = _this$props3.startX,
-              endX = _this$props3.endX;
+          var _this$props10 = _this.props,
+              updateHandler = _this$props10.updateHandler,
+              startX = _this$props10.startX,
+              endX = _this$props10.endX;
           updateHandler(startX, endX);
         }
     });
@@ -162,14 +196,14 @@ function (_PureComponent) {
   _createClass(OnPlotXRanger, [{
     key: "render",
     value: function render() {
-      var _this$props4 = this.props,
-          minX = _this$props4.minX,
-          maxX = _this$props4.maxX,
-          width = _this$props4.width,
-          height = _this$props4.height,
-          startX = _this$props4.startX,
-          endX = _this$props4.endX,
-          showHandle = _this$props4.showHandle;
+      var _this$props11 = this.props,
+          minX = _this$props11.minX,
+          maxX = _this$props11.maxX,
+          width = _this$props11.width,
+          height = _this$props11.height,
+          startX = _this$props11.startX,
+          endX = _this$props11.endX,
+          showHandle = _this$props11.showHandle;
       var dragged = this.state.dragged; // Calculate positions
 
       var x0, x1;
@@ -181,7 +215,7 @@ function (_PureComponent) {
       var mainHandleElem = null;
       var documentInteractionElem = null; // Left handle
 
-      if (x0 >= 0 && x0 <= width) {
+      if (showHandle) {
         leftHandleElem = _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("div", {
           style: {
             position: "absolute",
@@ -216,9 +250,6 @@ function (_PureComponent) {
           className: "leftHandle",
           onMouseDown: this.handleLeftHandleDragStart
         }));
-      }
-
-      if (x1 >= 0 && x1 <= width) {
         rightHandleElem = _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("div", {
           style: {
             position: "absolute",
@@ -229,7 +260,7 @@ function (_PureComponent) {
             zIndex: 99
           },
           className: "rightHandle",
-          onMouseDown: this.handleLeftHandleDragStart
+          onMouseDown: this.handleRightHandleDragStart
         }), _react.default.createElement("div", {
           style: {
             position: "absolute",
@@ -240,7 +271,7 @@ function (_PureComponent) {
             zIndex: 100
           },
           className: "rightHandle",
-          onMouseDown: this.handleLeftHandleDragStart
+          onMouseDown: this.handleRightHandleDragStart
         }), _react.default.createElement("div", {
           style: {
             position: "absolute",
@@ -251,26 +282,22 @@ function (_PureComponent) {
             zIndex: 98
           },
           className: "rightHandle",
-          onMouseDown: this.handleLeftHandleDragStart
+          onMouseDown: this.handleRightHandleDragStart
         }));
       }
 
       var mainWidth = Math.max(1, x1 - x0);
-
-      if (!(x0 > width || 0 > x1)) {
-        mainHandleElem = _react.default.createElement("div", {
-          ref: this.ref,
-          style: {
-            position: "absolute",
-            left: x0,
-            top: 0,
-            width: mainWidth,
-            height: height
-          },
-          className: "mainHandle",
-          onMouseDown: this.handleMainHandleDragStart
-        });
-      }
+      mainHandleElem = _react.default.createElement("div", {
+        style: {
+          position: "absolute",
+          left: x0,
+          top: 0,
+          width: mainWidth,
+          height: height
+        },
+        className: "mainHandle",
+        onMouseDown: this.handleMainHandleDragStart
+      });
 
       switch (dragged) {
         case "left":
@@ -318,34 +345,12 @@ function (_PureComponent) {
       ev.stopPropagation();
       ev.preventDefault();
       this.lastClickTimeStamp = ev.timeStamp;
-      var _this$props5 = this.props,
-          width = _this$props5.width,
-          minX = _this$props5.minX,
-          maxX = _this$props5.maxX,
-          startX = _this$props5.startX,
-          endX = _this$props5.endX;
-      var snapshot = this.snapshot;
-      var referenceFrame = this.ref.current.getBoundingClientRect();
-      snapshot.referenceFrame = referenceFrame;
-      snapshot.width = width;
-      snapshot.minX = minX;
-      snapshot.maxX = maxX;
-      snapshot.startX = startX;
-      snapshot.endX = endX;
-      snapshot.initialDragX = (0, _plotUtils.fromDomXCoord_Linear)(width, minX, maxX, ev.clientX - referenceFrame.left);
     }
   }, {
     key: "handleDragging",
     value: function handleDragging(ev) {
       ev.stopPropagation();
       ev.preventDefault();
-      var snapshot = this.snapshot;
-      var width = snapshot.width,
-          minX = snapshot.minX,
-          maxX = snapshot.maxX,
-          referenceFrame = snapshot.referenceFrame;
-      var curDragX = (0, _plotUtils.fromDomXCoord_Linear)(width, minX, maxX, ev.clientX - referenceFrame.left);
-      return curDragX;
     }
   }, {
     key: "snapStartX",
@@ -430,8 +435,8 @@ OnPlotXRanger.propTypes = {
   snap: _propTypes.default.number.isRequired,
   showHandle: _propTypes.default.bool.isRequired,
   updatingHandler: _propTypes.default.func.isRequired,
-  updateHandler: _propTypes.default.func.isRequired,
-  clickHandler: _propTypes.default.func.isRequired
+  updateHandler: _propTypes.default.func,
+  clickHandler: _propTypes.default.func
 };
 var _default = OnPlotXRanger;
 exports.default = _default;

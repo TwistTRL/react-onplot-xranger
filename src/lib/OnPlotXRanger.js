@@ -35,7 +35,7 @@ class OnPlotXRanger extends PureComponent {
     let mainHandleElem = null;
     let documentInteractionElem = null;
     // Left handle
-    if (x0>=0 && x0<=width) {
+    if (showHandle) {
       leftHandleElem = (
         <>
           <div  style={{position:"absolute",
@@ -70,8 +70,6 @@ class OnPlotXRanger extends PureComponent {
           </div>
         </>
         );
-    }
-    if ( x1>=0 && x1<=width ) {
       rightHandleElem = (
         <>
           <div  style={{position:"absolute",
@@ -81,7 +79,7 @@ class OnPlotXRanger extends PureComponent {
                         height:SIDE_HANDLE_HEIGHT,
                         zIndex:99}}
               className="rightHandle"
-              onMouseDown={this.handleLeftHandleDragStart}
+              onMouseDown={this.handleRightHandleDragStart}
               >
           </div>
           <div  style={{position:"absolute",
@@ -91,7 +89,7 @@ class OnPlotXRanger extends PureComponent {
                         height:SIDE_HANDLE_HEIGHT/2,
                         zIndex:100}}
                 className="rightHandle"
-                onMouseDown={this.handleLeftHandleDragStart}
+                onMouseDown={this.handleRightHandleDragStart}
               >
           </div>
           <div  style={{position:"absolute",
@@ -101,27 +99,24 @@ class OnPlotXRanger extends PureComponent {
                         height:SIDE_HANDLE_HEIGHT/2,
                         zIndex:98}}
                 className="rightHandle"
-                onMouseDown={this.handleLeftHandleDragStart}
+                onMouseDown={this.handleRightHandleDragStart}
               >
           </div>
         </>
         );
     }
     let mainWidth = Math.max(1,x1-x0);
-    if ( !(x0>width || 0>x1) ) {
-      mainHandleElem = (
-        <div  ref={this.ref}
-              style={{position:"absolute",
-                      left:x0,
-                      top:0,
-                      width:mainWidth,
-                      height:height}}
-              className="mainHandle"
-              onMouseDown={this.handleMainHandleDragStart}
-              >
-         </div>
-         );
-    }
+    mainHandleElem = (
+      <div  style={{position:"absolute",
+                    left:x0,
+                    top:0,
+                    width:mainWidth,
+                    height:height}}
+            className="mainHandle"
+            onMouseDown={this.handleMainHandleDragStart}
+            >
+      </div>
+      );
     
     switch (dragged) {
       case "left":
@@ -139,7 +134,9 @@ class OnPlotXRanger extends PureComponent {
     
     return (
       <>
-        <div  style={{overflow:"hidden",position:"relative",height:height,width:width,top:0,left:0}}>
+        <div  style={{overflow:"hidden",position:"relative",
+                      height:height,width:width,
+                      top:0,left:0}}>
           {mainHandleElem}
           {leftHandleElem}
           {rightHandleElem}
@@ -153,70 +150,63 @@ class OnPlotXRanger extends PureComponent {
     ev.stopPropagation();
     ev.preventDefault();
     this.lastClickTimeStamp = ev.timeStamp;
-    let { width,minX,
-          maxX,startX,endX} = this.props;
-    let {snapshot} = this;
-    let referenceFrame = this.ref.current.getBoundingClientRect();
-    snapshot.referenceFrame = referenceFrame;
-    snapshot.width = width;
-    snapshot.minX = minX;
-    snapshot.maxX = maxX;
-    snapshot.startX = startX;
-    snapshot.endX = endX;
-    snapshot.initialDragX = fromDomXCoord_Linear(width,minX,maxX,ev.clientX-referenceFrame.left);
   }
   handleLeftHandleDragStart = (ev)=>{
     this.handleDragStart(ev);
+    let { width,minX,
+          maxX,startX} = this.props;
+    let startDomX = toDomXCoord_Linear(width,minX,maxX,startX);
+    this.offsetStartDomX = startDomX-ev.clientX;
     this.setState({dragged:"left"});
   }
   handleRightHandleDragStart = (ev)=>{
     this.handleDragStart(ev);
+    let { width,minX,
+          maxX,endX} = this.props;
+    let endDomX = toDomXCoord_Linear(width,minX,maxX,endX);
+    this.offsetEndDomX = endDomX-ev.clientX;
     this.setState({dragged:"right"});
   }
   handleMainHandleDragStart = (ev)=>{
     this.handleDragStart(ev);
+    let { width,minX,
+          maxX,startX,endX} = this.props;
+    let startDomX = toDomXCoord_Linear(width,minX,maxX,startX);
+    this.offsetStartDomX = startDomX-ev.clientX;
+    this.diffX = endX-startX;
     this.setState({dragged:"main"});
   }
   
   handleDragging(ev){
     ev.stopPropagation();
     ev.preventDefault();
-    let {snapshot} = this;
-    let { width,minX,maxX,
-          referenceFrame
-          } = snapshot;
-    let curDragX = fromDomXCoord_Linear(width,minX,maxX,ev.clientX-referenceFrame.left);
-    return curDragX;
   }
-  
   handleLeftHandleDragging = (ev)=>{
-    let {initialDragX} = this.snapshot;
-    let {updateStartXHandler,startX,endX,minX,maxX} = this.props;
-    let curDragX = this.handleDragging(ev);
-    let newStartX = curDragX -initialDragX + startX;
+    this.handleDragging(ev);
+    let {updateHandler,endX} = this.props;
+    let {offsetStartDomX} = this;
+    let {width,minX,maxX} = this.props;
+    let newStartX = fromDomXCoord_Linear(width,minX,maxX,ev.clientX+offsetStartDomX);
     newStartX = this.snapStartX(newStartX,minX,endX);
-    updateStartXHandler(newStartX);
+    updateHandler(newStartX,endX);
   }
   handleRightHandleDragging = (ev)=>{
-    let { startX,endX,
-          maxX,
-          initialDragX} = this.snapshot;
-    let {updateEndXHandler} = this.props;
-    let curDragX = this.handleDragging(ev);
-    let newEndX = curDragX -initialDragX + endX;
+    this.handleDragging(ev);
+    let {updateHandler,startX} = this.props;
+    let {offsetEndDomX} = this;
+    let {width,minX,maxX} = this.props;
+    let newEndX = fromDomXCoord_Linear(width,minX,maxX,ev.clientX+offsetEndDomX);
     newEndX = this.snapEndX(newEndX,startX,maxX);
-    updateEndXHandler(newEndX);
+    updateHandler(startX,newEndX);
   }
   handleMainHandleDragging = (ev)=>{
-    let { startX,endX,
-          minX,maxX,
-          initialDragX} = this.snapshot;
-    let {updateStartXHandler,updateEndXHandler} = this.props;
-    let curDragX = this.handleDragging(ev);
-    let deltaX = curDragX - initialDragX;
-    deltaX = Math.max(Math.min(deltaX,maxX-endX),minX-startX);
-    updateStartXHandler(startX+deltaX);
-    updateEndXHandler(endX+deltaX);
+    this.handleDragging(ev);
+    let {updateHandler,endX} = this.props;
+    let {offsetStartDomX,diffX} = this;
+    let {width,minX,maxX} = this.props;
+    let newStartX = fromDomXCoord_Linear(width,minX,maxX,ev.clientX+offsetStartDomX);
+    let newEndX = newStartX+diffX;
+    updateHandler(newStartX,newEndX);
   }
   
   handleDragEnd = (ev)=>{
@@ -298,8 +288,8 @@ OnPlotXRanger.propTypes = {
   snap: PropTypes.number.isRequired,
   showHandle: PropTypes.bool.isRequired,
   updatingHandler: PropTypes.func.isRequired,
-  updateHandler: PropTypes.func.isRequired,
-  clickHandler: PropTypes.func.isRequired,
+  updateHandler: PropTypes.func,
+  clickHandler: PropTypes.func,
 }
 
 export default OnPlotXRanger;
