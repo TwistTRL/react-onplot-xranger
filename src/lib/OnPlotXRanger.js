@@ -183,30 +183,30 @@ class OnPlotXRanger extends PureComponent {
   }
   handleLeftHandleDragging = (ev)=>{
     this.handleDragging(ev);
-    let {updateHandler,endX} = this.props;
+    let {updatingHandler,endX} = this.props;
     let {offsetStartDomX} = this;
     let {width,minX,maxX} = this.props;
     let newStartX = fromDomXCoord_Linear(width,minX,maxX,ev.clientX+offsetStartDomX);
     newStartX = this.snapStartX(newStartX,minX,endX);
-    updateHandler(newStartX,endX);
+    updatingHandler(newStartX,endX);
   }
   handleRightHandleDragging = (ev)=>{
     this.handleDragging(ev);
-    let {updateHandler,startX} = this.props;
+    let {updatingHandler,startX} = this.props;
     let {offsetEndDomX} = this;
     let {width,minX,maxX} = this.props;
     let newEndX = fromDomXCoord_Linear(width,minX,maxX,ev.clientX+offsetEndDomX);
     newEndX = this.snapEndX(newEndX,startX,maxX);
-    updateHandler(startX,newEndX);
+    updatingHandler(startX,newEndX);
   }
   handleMainHandleDragging = (ev)=>{
     this.handleDragging(ev);
-    let {updateHandler,endX} = this.props;
+    let {updatingHandler,endX} = this.props;
     let {offsetStartDomX,diffX} = this;
     let {width,minX,maxX} = this.props;
     let newStartX = fromDomXCoord_Linear(width,minX,maxX,ev.clientX+offsetStartDomX);
     let newEndX = newStartX+diffX;
-    updateHandler(newStartX,newEndX);
+    updatingHandler(newStartX,newEndX);
   }
   
   handleDragEnd = (ev)=>{
@@ -287,7 +287,7 @@ OnPlotXRanger.propTypes = {
   endX: PropTypes.number.isRequired,
   snap: PropTypes.number.isRequired,
   showHandle: PropTypes.bool.isRequired,
-  updatingHandler: PropTypes.func.isRequired,
+  updatingHandler: PropTypes.func,
   updateHandler: PropTypes.func,
   clickHandler: PropTypes.func,
 }

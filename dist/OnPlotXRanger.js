@@ -108,7 +108,7 @@ function (_PureComponent) {
       _this.handleDragging(ev);
 
       var _this$props4 = _this.props,
-          updateHandler = _this$props4.updateHandler,
+          updatingHandler = _this$props4.updatingHandler,
           endX = _this$props4.endX;
 
       var _assertThisInitialize = _assertThisInitialized(_this),
@@ -120,14 +120,14 @@ function (_PureComponent) {
           maxX = _this$props5.maxX;
       var newStartX = (0, _plotUtils.fromDomXCoord_Linear)(width, minX, maxX, ev.clientX + offsetStartDomX);
       newStartX = _this.snapStartX(newStartX, minX, endX);
-      updateHandler(newStartX, endX);
+      updatingHandler(newStartX, endX);
     });
 
     _defineProperty(_assertThisInitialized(_this), "handleRightHandleDragging", function (ev) {
       _this.handleDragging(ev);
 
       var _this$props6 = _this.props,
-          updateHandler = _this$props6.updateHandler,
+          updatingHandler = _this$props6.updatingHandler,
           startX = _this$props6.startX;
 
       var _assertThisInitialize2 = _assertThisInitialized(_this),
@@ -139,14 +139,14 @@ function (_PureComponent) {
           maxX = _this$props7.maxX;
       var newEndX = (0, _plotUtils.fromDomXCoord_Linear)(width, minX, maxX, ev.clientX + offsetEndDomX);
       newEndX = _this.snapEndX(newEndX, startX, maxX);
-      updateHandler(startX, newEndX);
+      updatingHandler(startX, newEndX);
     });
 
     _defineProperty(_assertThisInitialized(_this), "handleMainHandleDragging", function (ev) {
       _this.handleDragging(ev);
 
       var _this$props8 = _this.props,
-          updateHandler = _this$props8.updateHandler,
+          updatingHandler = _this$props8.updatingHandler,
           endX = _this$props8.endX;
 
       var _assertThisInitialize3 = _assertThisInitialized(_this),
@@ -159,7 +159,7 @@ function (_PureComponent) {
           maxX = _this$props9.maxX;
       var newStartX = (0, _plotUtils.fromDomXCoord_Linear)(width, minX, maxX, ev.clientX + offsetStartDomX);
       var newEndX = newStartX + diffX;
-      updateHandler(newStartX, newEndX);
+      updatingHandler(newStartX, newEndX);
     });
 
     _defineProperty(_assertThisInitialized(_this), "handleDragEnd", function (ev) {
@@ -434,7 +434,7 @@ OnPlotXRanger.propTypes = {
   endX: _propTypes.default.number.isRequired,
   snap: _propTypes.default.number.isRequired,
   showHandle: _propTypes.default.bool.isRequired,
-  updatingHandler: _propTypes.default.func.isRequired,
+  updatingHandler: _propTypes.default.func,
   updateHandler: _propTypes.default.func,
   clickHandler: _propTypes.default.func
 };

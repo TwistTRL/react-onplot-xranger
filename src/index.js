@@ -17,6 +17,8 @@ class App extends Component {
                   endX: 200,
                   snap: 1000,
                   showHandle: true,
+                  startXUpdate:100,
+                  endXUpdate:200,
                   };
   }
   
@@ -25,7 +27,8 @@ class App extends Component {
           width,height,
           startX,endX,
           snap,
-          showHandle
+          showHandle,
+          startXUpdate,endXUpdate
           } = this.state;
     return (
       <>
@@ -95,6 +98,15 @@ class App extends Component {
                           clickHandler={this.handleClick}
                           />
         </fieldset>
+        <fieldset>
+          <legend>Other</legend>
+          <div>
+            startXUpdate: {startXUpdate}
+          </div>
+          <div>
+            endXUpdate: {endXUpdate}
+          </div>
+        </fieldset>
       </>
     );
   }
@@ -103,8 +115,8 @@ class App extends Component {
     this.setState({startX,endX});
   }
   
-  handleUpdate = (startX,endX)=>{
-    this.setState({startX,endX});
+  handleUpdate = (startXUpdate,endXUpdate)=>{
+    this.setState({startXUpdate,endXUpdate});
   }
   
   handleClick = ()=>{
