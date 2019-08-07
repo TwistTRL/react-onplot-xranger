@@ -27,10 +27,11 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1",
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
     "gh-pages": "^2.0.1",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
@@ -41,9 +42,11 @@
   "module": "dist/index.js",
   "babel": {
     "presets": [
-      "react",
-      "env",
-      "stage-0"
+      "@babel/preset-react",
+      "@babel/preset-env"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-class-properties"
     ]
   },
   "homepage": "https://twisttrl.github.io/react-onplot-xranger/",

@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import {toDomXCoord_Linear,
         fromDomXCoord_Linear} from "plot-utils";
@@ -8,8 +8,7 @@ import DragOverlay from "./DragOverlay";
 import "./OnPlotXRanger.css";
 
 const SIDE_HANDLE_WIDTH = 7;
-const TOP_HANDLE_HEIGHT = 7;
-
+const SIDE_HANDLE_HEIGHT = 50;
 class OnPlotXRanger extends PureComponent {
   constructor(props){
     super(props);
@@ -23,7 +22,7 @@ class OnPlotXRanger extends PureComponent {
     let { minX,maxX,
           width,height,
           startX,endX,
-          topHandle
+          showHandle
           } = this.props;
     let {dragged} = this.state;
     // Calculate positions
@@ -35,44 +34,93 @@ class OnPlotXRanger extends PureComponent {
     let rightHandleElem = null;
     let mainHandleElem = null;
     let documentInteractionElem = null;
-    let top = topHandle ? TOP_HANDLE_HEIGHT : 0;
     // Left handle
     if (x0>=0 && x0<=width) {
-      leftHandleElem = <div style={{position:"absolute",
-                                    left:x0,
-                                    top:top,
-                                    width:SIDE_HANDLE_WIDTH,
-                                    height:height-top}}
-                            className="leftHandle"
-                            onMouseDown={this.handleLeftHandleDragStart}
-                            >
-                       </div>;
+      leftHandleElem = (
+        <>
+          <div  style={{position:"absolute",
+                        left:x0-SIDE_HANDLE_WIDTH/2,
+                        top:(height-SIDE_HANDLE_HEIGHT)/2,
+                        width:SIDE_HANDLE_WIDTH/2,
+                        height:SIDE_HANDLE_HEIGHT,
+                        zIndex:99}}
+                className="leftHandle"
+                onMouseDown={this.handleLeftHandleDragStart}
+              >
+          </div>
+          <div  style={{position:"absolute",
+                        left:x0,
+                        top:height/2,
+                        width:SIDE_HANDLE_WIDTH/2,
+                        height:SIDE_HANDLE_HEIGHT/2,
+                        zIndex:100}}
+                className="leftHandle"
+                onMouseDown={this.handleLeftHandleDragStart}
+              >
+          </div>
+          <div  style={{position:"absolute",
+                        left:x0,
+                        top:height/2-SIDE_HANDLE_HEIGHT/2,
+                        width:SIDE_HANDLE_WIDTH/2,
+                        height:SIDE_HANDLE_HEIGHT/2,
+                        zIndex:98}}
+                className="leftHandle"
+                onMouseDown={this.handleLeftHandleDragStart}
+              >
+          </div>
+        </>
+        );
     }
     if ( x1>=0 && x1<=width ) {
-      rightHandleElem = <div  style={{position:"absolute",
-                                      left:x1,
-                                      marginLeft:-SIDE_HANDLE_WIDTH,
-                                      top:top,
-                                      width:SIDE_HANDLE_WIDTH,
-                                      height:height-top}}
-                              className="rightHandle"
-                              onMouseDown={this.handleRightHandleDragStart}
-                              >
-                       </div>;
+      rightHandleElem = (
+        <>
+          <div  style={{position:"absolute",
+                        left:x1,
+                        top:height/2-SIDE_HANDLE_HEIGHT/2,
+                        width:SIDE_HANDLE_WIDTH/2,
+                        height:SIDE_HANDLE_HEIGHT,
+                        zIndex:99}}
+              className="rightHandle"
+              onMouseDown={this.handleLeftHandleDragStart}
+              >
+          </div>
+          <div  style={{position:"absolute",
+                        left:x1-SIDE_HANDLE_WIDTH/2,
+                        top:height/2-SIDE_HANDLE_HEIGHT/2,
+                        width:SIDE_HANDLE_WIDTH/2,
+                        height:SIDE_HANDLE_HEIGHT/2,
+                        zIndex:100}}
+                className="rightHandle"
+                onMouseDown={this.handleLeftHandleDragStart}
+              >
+          </div>
+          <div  style={{position:"absolute",
+                        left:x1-SIDE_HANDLE_WIDTH/2,
+                        top:height/2,
+                        width:SIDE_HANDLE_WIDTH/2,
+                        height:SIDE_HANDLE_HEIGHT/2,
+                        zIndex:98}}
+                className="rightHandle"
+                onMouseDown={this.handleLeftHandleDragStart}
+              >
+          </div>
+        </>
+        );
     }
-    let mainLeft = Math.min(x0,x1-SIDE_HANDLE_WIDTH);
-    let mainRight = Math.max(x1,x0+SIDE_HANDLE_WIDTH);
-    let mainWidth = mainRight-mainLeft;
+    let mainWidth = Math.max(1,x1-x0);
     if ( !(x0>width || 0>x1) ) {
-      mainHandleElem = <div style={{position:"absolute",
-                                    left:mainLeft,
-                                    top:0,
-                                    width:mainWidth,
-                                    height:height}}
-                            className="mainHandle"
-                            onMouseDown={this.handleMainHandleDragStart}
-                            >
-                       </div>;
+      mainHandleElem = (
+        <div  ref={this.ref}
+              style={{position:"absolute",
+                      left:x0,
+                      top:0,
+                      width:mainWidth,
+                      height:height}}
+              className="mainHandle"
+              onMouseDown={this.handleMainHandleDragStart}
+              >
+         </div>
+         );
     }
     
     switch (dragged) {
@@ -90,14 +138,14 @@ class OnPlotXRanger extends PureComponent {
     }
     
     return (
-      <Fragment>
-        <div ref={this.ref} style={{overflow:"hidden",position:"relative",height:height,width:width,top:0,left:0}}>
+      <>
+        <div  style={{overflow:"hidden",position:"relative",height:height,width:width,top:0,left:0}}>
           {mainHandleElem}
           {leftHandleElem}
           {rightHandleElem}
         </div>
         {documentInteractionElem}
-      </Fragment>
+      </>
     );
   }
   
@@ -142,10 +190,8 @@ class OnPlotXRanger extends PureComponent {
   }
   
   handleLeftHandleDragging = (ev)=>{
-    let { startX,endX,
-          minX,
-          initialDragX} = this.snapshot;
-    let {updateStartXHandler} = this.props;
+    let {initialDragX} = this.snapshot;
+    let {updateStartXHandler,startX,endX,minX,maxX} = this.props;
     let curDragX = this.handleDragging(ev);
     let newStartX = curDragX -initialDragX + startX;
     newStartX = this.snapStartX(newStartX,minX,endX);
@@ -179,23 +225,13 @@ class OnPlotXRanger extends PureComponent {
     this.setState({dragged:null});
     // If it is a click, flip range
     if (ev.timeStamp - this.lastClickTimeStamp < 100){
-      let { updateMinXHandler,updateMaxXHandler,
-            startX,endX,
-            minX,maxX,
-            globalMinX,globalMaxX} = this.props;
-      if (startX===minX && endX===maxX) {
-        updateMinXHandler(globalMinX);
-        updateMaxXHandler(globalMaxX);
-      }
-      else {
-        updateMinXHandler(startX);
-        updateMaxXHandler(endX);
-      }
+      let {clickHandler} = this.props;
+      clickHandler();
     }
     // If it is not a click, update report drag end
     else {
-      let {dragEndHandler} = this.props;
-      dragEndHandler();
+      let {updateHandler,startX,endX} = this.props;
+      updateHandler(startX,endX);
     }
   }
 
@@ -253,8 +289,6 @@ class OnPlotXRanger extends PureComponent {
 }
 
 OnPlotXRanger.propTypes = {
-  globalMinX: PropTypes.number.isRequired,
-  globalMaxX: PropTypes.number.isRequired,
   minX: PropTypes.number.isRequired,
   maxX: PropTypes.number.isRequired,
   width: PropTypes.number.isRequired,
@@ -262,12 +296,10 @@ OnPlotXRanger.propTypes = {
   startX: PropTypes.number.isRequired,
   endX: PropTypes.number.isRequired,
   snap: PropTypes.number.isRequired,
-  topHandle: PropTypes.bool.isRequired,
-  updateStartXHandler: PropTypes.func.isRequired,
-  updateEndXHandler: PropTypes.func.isRequired,
-  updateMinXHandler: PropTypes.func.isRequired,
-  updateMaxXHandler: PropTypes.func.isRequired,
-  dragEndHandler: PropTypes.func.isRequired,
+  showHandle: PropTypes.bool.isRequired,
+  updatingHandler: PropTypes.func.isRequired,
+  updateHandler: PropTypes.func.isRequired,
+  clickHandler: PropTypes.func.isRequired,
 }
 
 export default OnPlotXRanger;
