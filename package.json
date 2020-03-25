@@ -2,7 +2,7 @@
   "name": "react-onplot-xranger",
   "version": "0.1.0",
   "dependencies": {
-    "plot-utils": "github:zhoulytwinyu/plot-utils"
+    "plot-utils": "github:TwistTRL/plot-utils"
   },
   "peerDependencies": {
     "prop-types": "^15.7.2",
